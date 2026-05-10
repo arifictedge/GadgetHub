@@ -1,9 +1,38 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { HiOutlineShoppingCart, HiOutlineHeart, HiStar } from 'react-icons/hi';
+import { MdCompareArrows } from 'react-icons/md';
+import toast from 'react-hot-toast';
 import { useCart } from '../../context/CartContext';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
+
+  const handleBuyNow = (e) => {
+    e.preventDefault();
+    addToCart(product);
+    navigate('/cart');
+  };
+
+  const handleCompare = (e) => {
+    e.preventDefault();
+    let compareList = [];
+    try {
+      compareList = JSON.parse(localStorage.getItem('compareList') || '[]');
+    } catch (err) {
+      compareList = [];
+    }
+    
+    if (!compareList.find(item => item._id === product._id)) {
+      compareList.push(product);
+      localStorage.setItem('compareList', JSON.stringify(compareList));
+      window.dispatchEvent(new Event('compareUpdated'));
+      toast.success('Added to compare list');
+    } else {
+      toast.success('Already in compare list');
+    }
+  };
+
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
@@ -64,14 +93,35 @@ const ProductCard = ({ product }) => {
         </div>
 
         {/* Actions */}
-        <button
-          onClick={() => addToCart(product)}
-          disabled={product.stock === 0}
-          className="w-full flex items-center justify-center gap-2 py-2.5 bg-primary-50 hover:bg-primary-600 text-primary-600 hover:text-white text-sm font-medium rounded-xl transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed border border-primary-200 hover:border-primary-600"
-        >
-          <HiOutlineShoppingCart className="w-4 h-4" />
-          Add to Cart
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleBuyNow}
+            disabled={product.stock === 0}
+            className="flex-1 flex items-center justify-center py-2.5 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-xl transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed border border-transparent px-2"
+          >
+            Buy Now
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              addToCart(product);
+            }}
+            disabled={product.stock === 0}
+            className="p-2.5 flex-shrink-0 bg-primary-50 hover:bg-primary-600 text-primary-600 hover:text-white rounded-xl border border-primary-200 hover:border-primary-600 transition-colors shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
+            title="Add to Cart"
+          >
+            <HiOutlineShoppingCart className="w-5 h-5" />
+          </button>
+
+          <button
+            onClick={handleCompare}
+            className="p-2.5 flex-shrink-0 bg-white hover:bg-gray-50 text-gray-500 hover:text-primary-600 rounded-xl border border-gray-200 hover:border-primary-200 transition-colors shadow-sm"
+            title="Compare"
+          >
+            <MdCompareArrows className="w-5 h-5" />
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ import Checkout from './pages/Checkout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import UserDashboard from './pages/UserDashboard';
+import Compare from './pages/Compare';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import NotFound from './pages/NotFound';
 import './index.css';
@@ -45,6 +46,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/compare" element={<Compare />} />
 
               {/* Protected */}
               <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />

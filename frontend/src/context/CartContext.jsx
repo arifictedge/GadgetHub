@@ -21,30 +21,30 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   const addToCart = (product, quantity = 1) => {
-    setCartItems((prev) => {
-      const existing = prev.find((item) => item._id === product._id);
-      if (existing) {
-        const newQty = existing.quantity + quantity;
-        if (newQty > product.stock) {
-          toast.error(`Only ${product.stock} items available`);
-          return prev;
-        }
-        toast.success(`Updated quantity for ${product.name}`);
-        return prev.map((item) =>
-          item._id === product._id ? { ...item, quantity: newQty } : item
-        );
+    const existing = cartItems.find((item) => item._id === product._id);
+    if (existing) {
+      const newQty = existing.quantity + quantity;
+      if (newQty > product.stock) {
+        toast.error(`Only ${product.stock} items available`);
+        return;
       }
+      toast.success(`Updated quantity for ${product.name}`);
+      setCartItems((prev) =>
+        prev.map((item) =>
+          item._id === product._id ? { ...item, quantity: newQty } : item
+        )
+      );
+    } else {
       toast.success(`${product.name} added to cart`);
-      return [...prev, { ...product, quantity }];
-    });
+      setCartItems((prev) => [...prev, { ...product, quantity }]);
+    }
   };
 
   const removeFromCart = (productId) => {
-    setCartItems((prev) => {
-      const item = prev.find((i) => i._id === productId);
-      if (item) toast.success(`${item.name} removed from cart`);
-      return prev.filter((i) => i._id !== productId);
-    });
+    const item = cartItems.find((i) => i._id === productId);
+    if (item) toast.success(`${item.name} removed from cart`);
+    
+    setCartItems((prev) => prev.filter((i) => i._id !== productId));
   };
 
   const updateQuantity = (productId, quantity) => {
