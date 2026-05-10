@@ -12,7 +12,7 @@ const categories = [
 
 const Categories = () => {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 animate-fade-in min-h-[70vh]">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-14 animate-fade-in min-h-[70vh]">
       <div className="text-center mb-10">
         <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">All Categories</h1>
         <p className="text-gray-500 max-w-md mx-auto">Explore our wide range of tech categories</p>

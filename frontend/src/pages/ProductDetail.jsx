@@ -72,7 +72,7 @@ const ProductDetail = () => {
   const discount = product?.originalPrice ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
 
   if (loading) return (
-    <div className="max-w-7xl mx-auto px-4 py-8 animate-pulse">
+    <div className="max-w-[1400px] mx-auto px-4 py-8 animate-pulse">
       <div className="grid md:grid-cols-2 gap-10">
         <div className="aspect-square bg-white rounded-2xl" />
         <div className="space-y-4"><div className="h-6 bg-white rounded w-1/3" /><div className="h-8 bg-white rounded w-3/4" /><div className="h-6 bg-white rounded w-1/2" /><div className="h-40 bg-white rounded" /></div>
@@ -94,7 +94,7 @@ const ProductDetail = () => {
   ].filter(s => s.value && s.value !== 'N/A');
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
         <Link to="/products" className="hover:text-primary-400 flex items-center gap-1"><HiOutlineArrowLeft className="w-4 h-4" /> Products</Link>
@@ -154,18 +154,16 @@ const ProductDetail = () => {
           <p className="text-gray-600 leading-relaxed mb-6">{product.description}</p>
 
           {/* Quantity, Add to Cart & Buy Now */}
-          <div className="flex flex-col gap-3 mb-6">
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center bg-white border border-gray-200 rounded-xl">
-                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-3 text-gray-500 hover:text-gray-900"><HiOutlineMinus className="w-4 h-4" /></button>
-                <span className="w-12 text-center text-gray-900 font-medium">{quantity}</span>
-                <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="p-3 text-gray-500 hover:text-gray-900"><HiOutlinePlus className="w-4 h-4" /></button>
-              </div>
-              <button onClick={() => addToCart(product, quantity)} disabled={product.stock === 0} className="px-6 py-3 bg-primary-50 hover:bg-primary-600 text-primary-600 hover:text-white rounded-xl font-medium flex-1 sm:flex-none flex items-center justify-center gap-2 disabled:opacity-40 transition-all border border-primary-200 hover:border-primary-600">
-                <HiOutlineShoppingCart className="w-5 h-5" /> Add to Cart
-              </button>
+          <div className="flex flex-wrap items-center gap-4 mb-6">
+            <div className="flex items-center bg-white border border-gray-200 rounded-xl">
+              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-3 text-gray-500 hover:text-gray-900"><HiOutlineMinus className="w-4 h-4" /></button>
+              <span className="w-12 text-center text-gray-900 font-medium">{quantity}</span>
+              <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="p-3 text-gray-500 hover:text-gray-900"><HiOutlinePlus className="w-4 h-4" /></button>
             </div>
-            <button onClick={handleBuyNow} disabled={product.stock === 0} className="btn-primary w-full sm:max-w-md py-3.5 text-base flex justify-center items-center shadow-lg shadow-primary-500/30">
+            <button onClick={() => addToCart(product, quantity)} disabled={product.stock === 0} className="px-6 py-3 bg-primary-50 hover:bg-primary-600 text-primary-600 hover:text-white rounded-xl font-medium flex-1 sm:flex-none flex items-center justify-center gap-2 disabled:opacity-40 transition-all border border-primary-200 hover:border-primary-600">
+              <HiOutlineShoppingCart className="w-5 h-5" /> Add to Cart
+            </button>
+            <button onClick={handleBuyNow} disabled={product.stock === 0} className="btn-primary flex-1 sm:flex-none px-8 py-3 text-base flex justify-center items-center shadow-lg shadow-primary-500/30">
               Buy Now
             </button>
           </div>

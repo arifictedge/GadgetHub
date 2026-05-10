@@ -64,7 +64,7 @@ const Navbar = () => {
       {/* ===== MAIN NAVBAR (Top Row) ===== */}
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
         {/* Top Row: Logo + Search + Icons */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Left Side: Logo + Nav Links */}
             <div className="flex items-center gap-8 shrink-0">

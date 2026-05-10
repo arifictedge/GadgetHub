@@ -33,7 +33,7 @@ const FloatingActions = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+    <div className="hidden md:flex fixed bottom-6 right-6 z-50 flex-col gap-3">
       {/* Compare Button */}
       <Link
         to="/compare"

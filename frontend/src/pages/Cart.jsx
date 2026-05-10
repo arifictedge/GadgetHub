@@ -21,7 +21,7 @@ const Cart = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Shopping Cart <span className="text-gray-500 text-lg font-normal">({cartCount} items)</span></h1>
         <button onClick={clearCart} className="text-sm text-red-400 hover:text-red-300 transition-colors">Clear All</button>
