@@ -6,6 +6,7 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
+  getCategories,
 } = require('../controllers/productController');
 const { protect, adminOnly } = require('../middlewares/authMiddleware');
 
@@ -13,6 +14,7 @@ const router = express.Router();
 
 // @route   GET /api/products
 router.get('/', getProducts);
+router.get('/categories', getCategories);
 
 // @route   GET /api/products/:id
 router.get('/:id', getProductById);

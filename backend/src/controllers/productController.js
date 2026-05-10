@@ -168,7 +168,7 @@ const updateProduct = async (req, res) => {
     const product = await Product.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     );
 
     if (!product) {
@@ -206,10 +206,24 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// @desc    Get all unique categories
+// @route   GET /api/products/categories
+// @access  Public
+const getCategories = async (req, res) => {
+  try {
+    const categories = await Product.distinct('category');
+    res.json(categories);
+  } catch (error) {
+    console.error('GetCategories Error:', error.message);
+    res.status(500).json({ message: 'Server error fetching categories' });
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
   createProduct,
   updateProduct,
   deleteProduct,
+  getCategories,
 };

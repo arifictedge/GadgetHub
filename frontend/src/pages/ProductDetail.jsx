@@ -24,6 +24,7 @@ const ProductDetail = () => {
       setLoading(true);
       try {
         const { data } = await api.get(`/products/${slug}`);
+
         setProduct(data);
         setSelectedImage(0);
         setQuantity(1);
@@ -35,7 +36,7 @@ const ProductDetail = () => {
           try {
             const meRes = await api.get('/auth/me');
             setInWishlist(meRes.data.wishlist?.some(w => w._id === data._id));
-          } catch {}
+          } catch { }
         }
       } catch (err) {
         console.error('Error:', err);
@@ -106,21 +107,21 @@ const ProductDetail = () => {
 
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
         {/* Image Gallery */}
-        <div>
-          <div className="relative aspect-square bg-white/50 rounded-2xl overflow-hidden border border-gray-200 mb-4">
-            <img src={product.images?.[selectedImage] || product.images?.[0]} alt={product.name} className="w-full h-full object-cover" />
-            {discount > 0 && <span className="absolute top-4 left-4 bg-red-500 text-gray-900 text-sm font-bold px-3 py-1.5 rounded-xl">-{discount}%</span>}
-          </div>
+        <div className="flex flex-col-reverse lg:flex-row gap-4">
           {product.images?.length > 1 && (
-            <div className="flex gap-3">
+            <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible w-full lg:w-24 shrink-0 hide-scrollbar pb-2 lg:pb-0">
               {product.images.map((img, i) => (
                 <button key={i} onClick={() => setSelectedImage(i)}
-                  className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${i === selectedImage ? 'border-primary-500 ring-2 ring-primary-500/30' : 'border-gray-200 hover:border-gray-300'}`}>
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  className={`flex-shrink-0 w-20 h-20 lg:w-full lg:h-24 bg-white rounded-md overflow-hidden border transition-all ${i === selectedImage ? 'border-orange-500 ring-1 ring-orange-500/20' : 'border-gray-200 hover:border-gray-300'}`}>
+                  <img src={img} alt="" className="w-full h-full object-cover p-1" />
                 </button>
               ))}
             </div>
           )}
+          <div className="relative flex-1 aspect-square bg-white rounded-2xl overflow-hidden border border-gray-100 flex items-center justify-center p-4">
+            <img src={product.images?.[selectedImage] || product.images?.[0]} alt={product.name} className="max-w-full max-h-full object-contain" />
+            {discount > 0 && <span className="absolute top-4 left-4 bg-red-500 text-gray-900 text-sm font-bold px-3 py-1.5 rounded-xl">-{discount}%</span>}
+          </div>
         </div>
 
         {/* Product Info */}
@@ -130,7 +131,7 @@ const ProductDetail = () => {
 
           {/* Rating */}
           <div className="flex items-center gap-2 mb-4">
-            <div className="flex">{[1,2,3,4,5].map(s => <HiStar key={s} className={`w-5 h-5 ${s <= Math.round(product.rating) ? 'text-amber-400' : 'text-dark-600'}`} />)}</div>
+            <div className="flex">{[1, 2, 3, 4, 5].map(s => <HiStar key={s} className={`w-5 h-5 ${s <= Math.round(product.rating) ? 'text-amber-400' : 'text-dark-600'}`} />)}</div>
             <span className="text-gray-500 text-sm">{product.rating} ({product.numReviews} reviews)</span>
           </div>
 
@@ -146,8 +147,8 @@ const ProductDetail = () => {
           {/* Stock */}
           <div className="mb-6">
             {product.stock > 10 ? <span className="badge-success">In Stock</span>
-            : product.stock > 0 ? <span className="badge-warning">Only {product.stock} left</span>
-            : <span className="badge-danger">Out of Stock</span>}
+              : product.stock > 0 ? <span className="badge-warning">Only {product.stock} left</span>
+                : <span className="badge-danger">Out of Stock</span>}
           </div>
 
           {/* Description */}

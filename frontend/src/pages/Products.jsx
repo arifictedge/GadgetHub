@@ -4,7 +4,6 @@ import { HiOutlineFilter, HiOutlineX, HiOutlineChevronLeft, HiOutlineChevronRigh
 import api from '../lib/api';
 import ProductCard from '../components/product/ProductCard';
 
-const categoryList = ['Mobile', 'Laptop', 'Accessories', 'Headphones', 'Smartwatch'];
 const brandList = ['Samsung', 'Apple', 'Google', 'OnePlus', 'Xiaomi', 'Sony', 'Dell', 'ASUS', 'Lenovo', 'HP', 'Bose', 'JBL', 'Logitech', 'Anker', 'Garmin', 'Amazfit', 'Nothing', 'Realme', 'Acer', 'Microsoft', 'Keychron', 'Noise'];
 const ramOptions = ['4GB', '6GB', '8GB', '12GB', '16GB', '36GB'];
 const storageOptions = ['64GB', '128GB', '256GB', '512GB', '1TB'];
@@ -19,6 +18,7 @@ const sortOptions = [
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [pagination, setPagination] = useState({ current: 1, pages: 1, total: 0 });
   const [loading, setLoading] = useState(true);
   const [mobileFilters, setMobileFilters] = useState(false);
@@ -80,6 +80,19 @@ const Products = () => {
     fetchProducts();
   }, [searchParams.toString()]);
 
+  // Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await api.get('/products/categories');
+        setCategories(data);
+      } catch (err) {
+        console.error('Fetch categories error:', err);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   const activeCategories = filters.category ? filters.category.split(',') : [];
   const activeBrands = filters.brand ? filters.brand.split(',') : [];
   const activeRam = filters.ram ? filters.ram.split(',') : [];
@@ -99,13 +112,14 @@ const Products = () => {
       <div>
         <h3 className="text-gray-900 font-semibold text-sm mb-3 uppercase tracking-wider">Category</h3>
         <div className="space-y-2">
-          {categoryList.map((cat) => (
+          {categories.map((cat) => (
             <label key={cat} className="flex items-center gap-2.5 cursor-pointer group">
               <input type="checkbox" checked={activeCategories.includes(cat)} onChange={() => toggleArrayFilter('category', cat)}
                 className="w-4 h-4 rounded border-gray-300 bg-white text-primary-500 focus:ring-primary-500/30" />
               <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">{cat}</span>
             </label>
           ))}
+          {categories.length === 0 && <p className="text-xs text-gray-400 italic">No categories found</p>}
         </div>
       </div>
 

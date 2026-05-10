@@ -11,8 +11,11 @@ const AdminProducts = () => {
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [newCategory, setNewCategory] = useState('');
   const [formData, setFormData] = useState({
-    name: '', brand: '', category: 'Mobile', price: '', originalPrice: '', stock: '', description: '', featured: false,
+    name: '', brand: '', category: '', price: '', originalPrice: '', stock: '', description: '', featured: false,
     images: '', ram: '', storage: '', processor: '', display: '', battery: ''
   });
 
@@ -27,6 +30,22 @@ const AdminProducts = () => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const { data } = await api.get('/products/categories');
+      setCategories(data);
+      if (data.length > 0 && !formData.category) {
+        setFormData(prev => ({ ...prev, category: data[0] }));
+      }
+    } catch (error) {
+      console.error('Failed to load categories');
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchProducts();
@@ -35,6 +54,8 @@ const AdminProducts = () => {
   }, [search]);
 
   const handleOpenModal = (product = null) => {
+    setIsAddingCategory(false);
+    setNewCategory('');
     if (product) {
       setEditingId(product._id);
       setFormData({
@@ -49,7 +70,7 @@ const AdminProducts = () => {
     } else {
       setEditingId(null);
       setFormData({
-        name: '', brand: '', category: 'Mobile', price: '', originalPrice: '', stock: '', description: '', featured: false,
+        name: '', brand: '', category: categories[0] || '', price: '', originalPrice: '', stock: '', description: '', featured: false,
         images: '', ram: '', storage: '', processor: '', display: '', battery: ''
       });
     }
@@ -71,7 +92,7 @@ const AdminProducts = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const payload = {
-      name: formData.name, brand: formData.brand, category: formData.category,
+      name: formData.name, brand: formData.brand, category: isAddingCategory ? newCategory : formData.category,
       price: Number(formData.price), originalPrice: formData.originalPrice ? Number(formData.originalPrice) : undefined,
       stock: Number(formData.stock), description: formData.description, featured: formData.featured,
       images: formData.images.split(',').map(i => i.trim()).filter(i => i),
@@ -80,6 +101,10 @@ const AdminProducts = () => {
         display: formData.display, battery: formData.battery
       }
     };
+
+    if (isAddingCategory && !newCategory.trim()) {
+      return toast.error('Please enter a new category name');
+    }
 
     try {
       if (editingId) {
@@ -91,6 +116,7 @@ const AdminProducts = () => {
       }
       setIsModalOpen(false);
       fetchProducts();
+      fetchCategories();
     } catch (error) {
       toast.error(error.response?.data?.message || 'Action failed');
     }
@@ -161,9 +187,14 @@ const AdminProducts = () => {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-50/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-3xl my-8 p-6 animate-slide-down">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">{editingId ? 'Edit Product' : 'Add New Product'}</h3>
+        <div className="fixed inset-0 bg-gray-50/80 backdrop-blur-md z-50 flex items-start justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-gray-200 shadow-xl rounded-2xl w-full max-w-3xl my-auto p-4 sm:p-8 animate-slide-down">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-gray-900">{editingId ? 'Edit Product' : 'Add New Product'}</h3>
+              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
             <form onSubmit={handleSubmit} className="space-y-6">
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -177,9 +208,25 @@ const AdminProducts = () => {
                 </div>
                 <div>
                   <label className="block text-sm text-gray-600 mb-1">Category *</label>
-                  <select required value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="input-field cursor-pointer">
-                    {['Mobile', 'Laptop', 'Accessories', 'Headphones', 'Smartwatch'].map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
+                  {!isAddingCategory ? (
+                    <div className="flex gap-2">
+                      <select required value={formData.category} onChange={e => {
+                        if (e.target.value === 'ADD_NEW') {
+                          setIsAddingCategory(true);
+                        } else {
+                          setFormData({...formData, category: e.target.value});
+                        }
+                      }} className="input-field cursor-pointer flex-1">
+                        {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                        <option value="ADD_NEW" className="text-primary-600 font-bold">+ Add New Category</option>
+                      </select>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <input type="text" placeholder="Category Name" required value={newCategory} onChange={e => setNewCategory(e.target.value)} className="input-field flex-1" autoFocus />
+                      <button type="button" onClick={() => setIsAddingCategory(false)} className="px-3 text-sm text-gray-500 hover:text-red-500">Cancel</button>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm text-gray-600 mb-1">Price (৳) *</label>

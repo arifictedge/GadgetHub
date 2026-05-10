@@ -108,6 +108,14 @@
   .pause-marquee {
     animation-play-state: paused !important;
   }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @keyframes custom-marquee {
@@ -249,4 +257,21 @@
   .category-grid .category-card:first-child {
     grid-column: auto;
   }
+}
+
+/* ===== Swiper Custom Styles ===== */
+.trending-slider .swiper-pagination-bullet {
+  @apply bg-gray-300 opacity-100 w-2 h-2 transition-all duration-300;
+}
+
+.trending-slider .swiper-pagination-bullet-active {
+  @apply bg-primary-600 w-8 rounded-full;
+}
+
+.swiper-slide {
+  height: auto !important;
+}
+
+.swiper-slide > div {
+  height: 100%;
 }
