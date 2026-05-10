@@ -66,7 +66,7 @@ const Compare = () => {
               
               <div className="flex-1">
                 <p className="text-xs text-primary-600 font-medium mb-1 uppercase tracking-wider">{product.brand}</p>
-                <Link to={`/products/${product._id}`} className="text-base font-semibold text-gray-800 hover:text-primary-600 line-clamp-2 mb-3 h-12 leading-tight">
+                <Link to={`/products/${product.category}/${product.slug || product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`} className="text-base font-semibold text-gray-800 hover:text-primary-600 line-clamp-2 mb-3 h-12 leading-tight">
                   {product.name}
                 </Link>
                 <div className="text-xl font-bold text-gray-900 mb-5">

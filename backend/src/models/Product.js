@@ -8,6 +8,10 @@ const productSchema = new mongoose.Schema(
       trim: true,
       maxlength: [150, 'Product name cannot exceed 150 characters'],
     },
+    slug: {
+      type: String,
+      unique: true,
+    },
     brand: {
       type: String,
       required: [true, 'Brand is required'],
@@ -72,6 +76,18 @@ const productSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+productSchema.pre('save', function (next) {
+  if (this.isModified('name') || !this.slug) {
+    this.slug = this.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  }
+  if (typeof next === 'function') {
+    next();
+  }
+});
 
 // Text index for search functionality
 productSchema.index({ name: 'text', brand: 'text', description: 'text' });

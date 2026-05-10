@@ -40,7 +40,7 @@ const ProductCard = ({ product }) => {
   return (
     <div className="group glass-card overflow-hidden hover:border-primary-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/5 flex flex-col">
       {/* Image */}
-      <Link to={`/products/${product._id}`} className="relative block overflow-hidden aspect-square bg-white">
+      <Link to={`/products/${product.category}/${product.slug || product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`} className="relative block overflow-hidden aspect-square bg-white">
         <img
           src={product.images?.[0] || 'https://via.placeholder.com/400'}
           alt={product.name}
@@ -67,7 +67,7 @@ const ProductCard = ({ product }) => {
       {/* Info */}
       <div className="p-4 flex flex-col flex-1">
         <p className="text-xs text-primary-600 font-medium mb-1 uppercase tracking-wider">{product.brand}</p>
-        <Link to={`/products/${product._id}`} className="text-sm font-semibold text-gray-800 hover:text-primary-600 transition-colors line-clamp-2 mb-2 leading-snug">
+        <Link to={`/products/${product.category}/${product.slug || product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`} className="text-sm font-semibold text-gray-800 hover:text-primary-600 transition-colors line-clamp-2 mb-2 leading-snug">
           {product.name}
         </Link>
 
